@@ -1,0 +1,103 @@
+"use client";
+
+import React, { use, useEffect, useState } from "react";
+import Select from "./Select";
+import {
+  subdomain,
+  speciality,
+  category,
+  championship,
+  data,
+} from "@prisma/client";
+import getResultsAccordingToFilters from "../lib/fetchers/data/getResultsAccordingToFilters";
+
+type Props = {
+  items: {
+    subdomains: subdomain[] | [];
+    specialities: speciality[] | [];
+    categories: category[] | [];
+    championships: championship[] | [];
+  };
+};
+
+function TopContainer({ items }: Props) {
+  const { subdomains, specialities, categories, championships } = items;
+  const [subdomainId, setSubdomainId] = useState<number | undefined>();
+  const [specialityId, setSpecialityId] = useState<number | undefined>();
+  const [categoryId, setCategoryId] = useState<number | undefined>();
+  const [championshipId, setChampionshipId] = useState<number | undefined>();
+  const [data, setData] = useState<data[]>([]);
+
+  useEffect(() => {
+    async function fetchData() {
+      if (subdomainId && specialityId && categoryId && championshipId) {
+        console.log(
+          "fetching data",
+          subdomainId,
+          specialityId,
+          categoryId,
+          championshipId
+        );
+        const result = await getResultsAccordingToFilters(
+          subdomainId,
+          specialityId,
+          categoryId,
+          championshipId
+        );
+        setData(result);
+      }
+    }
+    fetchData();
+  }, [subdomainId, specialityId, categoryId, championshipId]);
+
+  const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    let item = e.target.id;
+    switch (item) {
+      case "subdomain":
+        setSubdomainId(parseInt(e.target.value));
+        break;
+      case "speciality":
+        setSpecialityId(parseInt(e.target.value));
+        break;
+      case "category":
+        setCategoryId(parseInt(e.target.value));
+        break;
+      case "championship":
+        setChampionshipId(parseInt(e.target.value));
+        break;
+      default:
+        break;
+    }
+  };
+
+  return (
+    <form className="w-full h-auto p-4 bg-gray-200 dark:bg-gray-800 flex flex-wrap justify-around items-center">
+      <Select
+        id="subdomain"
+        label="a subdomain"
+        items={subdomains}
+        onChange={onChange}
+      />
+      <Select
+        id="speciality"
+        label="a speciality"
+        items={specialities}
+        onChange={onChange}
+      />
+      <Select
+        id="category"
+        label="a category"
+        items={categories}
+        onChange={onChange}
+      />
+      <Select
+        id="championship"
+        label="a championship"
+        items={championships}
+        onChange={onChange}
+      />
+    </form>
+  );
+}
+
+export default TopContainer;

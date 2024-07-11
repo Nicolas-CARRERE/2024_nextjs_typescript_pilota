@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model category {
+  id           Int    @id @default(autoincrement())
+  value        String @db.VarChar(255)
+  label        String @db.VarChar(255)
+  subdomain_id Int?
+}
+
+model championship {
+  id           Int    @id @default(autoincrement())
+  value        String @db.VarChar(255)
+  label        String @db.VarChar(255)
+  subdomain_id Int?
+}
+
+model city {
+  id           Int    @id @default(autoincrement())
+  value        String @db.VarChar(255)
+  label        String @db.VarChar(255)
+  subdomain_id Int?
+}
+
+model club {
+  id           Int    @id @default(autoincrement())
+  value        String @db.VarChar(255)
+  label        String @db.VarChar(255)
+  subdomain_id Int?
+}
+
+model data {
+  data_id         Int       @id @default(autoincrement())
+  subdomain_id    Int 
+  championship_id Int
+  speciality_id   Int
+  category_id     Int
+  scraped_url     String? @db.VarChar(255)
+  title           String? @db.VarChar(255)
+  date            String?
+  game            String?
+  team1           String?
+  playera1        String?
+  playerb1        String?
+  team2           String?
+  playera2        String?
+  playerb2        String?
+  score           String?
+  comment         String?
+  created_at      DateTime? @default(now()) @db.Timestamp(6)
+  updated_at      DateTime? @default(now()) @db.Timestamp(6)
+}
+
+model phase {
+  id           Int    @id @default(autoincrement())
+  value        String @db.VarChar(255)
+  label        String @db.VarChar(255)
+  subdomain_id Int?
+}
+
+model speciality {
+  id           Int    @id @default(autoincrement())
+  value        String @db.VarChar(255)
+  label        String @db.VarChar(255)
+  subdomain_id Int?
+}
+
+model subdomain {
+  id    Int    @id @default(autoincrement())
+  label String @db.VarChar(100)
+}
