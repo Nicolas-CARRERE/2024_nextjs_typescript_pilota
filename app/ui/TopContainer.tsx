@@ -1,6 +1,6 @@
 "use client";
 
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Select from "./Select";
 import {
   subdomain,
@@ -18,9 +18,10 @@ type Props = {
     categories: category[] | [];
     championships: championship[] | [];
   };
+  onDataUpdate?: (data: data[]) => void;
 };
 
-function TopContainer({ items }: Props) {
+function TopContainer({ items, onDataUpdate }: Props) {
   const { subdomains, specialities, categories, championships } = items;
   const [subdomainId, setSubdomainId] = useState<number | undefined>();
   const [specialityId, setSpecialityId] = useState<number | undefined>();
@@ -31,13 +32,6 @@ function TopContainer({ items }: Props) {
   useEffect(() => {
     async function fetchData() {
       if (subdomainId && specialityId && categoryId && championshipId) {
-        console.log(
-          "fetching data",
-          subdomainId,
-          specialityId,
-          categoryId,
-          championshipId
-        );
         const result = await getResultsAccordingToFilters(
           subdomainId,
           specialityId,
@@ -49,6 +43,19 @@ function TopContainer({ items }: Props) {
     }
     fetchData();
   }, [subdomainId, specialityId, categoryId, championshipId]);
+
+  useEffect(() => {
+    if (onDataUpdate) {
+      onDataUpdate(data);
+    }
+  }, [data, onDataUpdate]);
+
+  const handleGetData = (e: React.FormEvent<HTMLFormElement>) => {
+    // Appeler la fonction onChange passée en tant que prop, si elle existe
+    if (onChange) {
+      onChange(e as any);
+    }
+  };
 
   const onChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     let item = e.target.id;
