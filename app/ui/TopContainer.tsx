@@ -22,15 +22,42 @@ type Props = {
 };
 
 function TopContainer({ items, onDataUpdate }: Props) {
+  // get the items from the cookies
+  const getCookieValue = (name: string) => {
+    const match = document.cookie.match(
+      new RegExp("(^| )" + name + "=([^;]+)")
+    );
+    return match ? parseInt(match[2]) : undefined;
+  };
+
   const { subdomains, specialities, categories, championships } = items;
-  const [subdomainId, setSubdomainId] = useState<number | undefined>();
-  const [specialityId, setSpecialityId] = useState<number | undefined>();
-  const [categoryId, setCategoryId] = useState<number | undefined>();
-  const [championshipId, setChampionshipId] = useState<number | undefined>();
+  const [subdomainId, setSubdomainId] = useState<number | undefined>(
+    getCookieValue("subdomainId")
+  );
+  const [specialityId, setSpecialityId] = useState<number | undefined>(
+    getCookieValue("specialityId")
+  );
+  const [categoryId, setCategoryId] = useState<number | undefined>(
+    getCookieValue("categoryId")
+  );
+  const [championshipId, setChampionshipId] = useState<number | undefined>(
+    getCookieValue("championshipId")
+  );
   const [data, setData] = useState<data[]>([]);
 
   useEffect(() => {
     async function fetchData() {
+      // set a cookie with the filters
+      document.cookie = `subdomainId=${
+        subdomainId ? subdomainId : null
+      }; path=/`;
+      document.cookie = `specialityId=${
+        specialityId ? specialityId : null
+      }; path=/`;
+      document.cookie = `categoryId=${categoryId ? categoryId : null}; path=/`;
+      document.cookie = `championshipId=${
+        championshipId ? championshipId : null
+      }; path=/`;
       if (subdomainId && specialityId && categoryId && championshipId) {
         const result = await getResultsAccordingToFilters(
           subdomainId,
@@ -83,24 +110,28 @@ function TopContainer({ items, onDataUpdate }: Props) {
         id="subdomain"
         label="a subdomain"
         items={subdomains}
+        defaultValue={subdomainId ? subdomainId.toString() : undefined}
         onChange={onChange}
       />
       <Select
         id="speciality"
         label="a speciality"
         items={specialities}
+        defaultValue={specialityId ? specialityId.toString() : undefined}
         onChange={onChange}
       />
       <Select
         id="category"
         label="a category"
         items={categories}
+        defaultValue={categoryId ? categoryId.toString() : undefined}
         onChange={onChange}
       />
       <Select
         id="championship"
         label="a championship"
         items={championships}
+        defaultValue={championshipId ? championshipId.toString() : undefined}
         onChange={onChange}
       />
     </form>

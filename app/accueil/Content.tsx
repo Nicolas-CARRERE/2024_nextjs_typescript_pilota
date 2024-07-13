@@ -9,6 +9,7 @@ import {
   championship,
   data,
 } from "@prisma/client";
+import Card from "../ui/Card";
 
 type Props = {
   items: {
@@ -37,8 +38,9 @@ function Content({ items }: Props) {
         items={{ subdomains, specialities, categories, championships }}
         onDataUpdate={handleDataUpdate}
       />
-      {/* Vous pouvez utiliser les données mises à jour ici */}
-      <div>Data: {JSON.stringify(data)}</div>
+      {data.map((d: data) => (
+        <Card key={d.game} data={d} />
+      ))}
     </div>
   );
 }

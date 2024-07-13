@@ -6,13 +6,15 @@ type Props = {
   id: string | undefined;
   label: string;
   items: subdomain[] | speciality[] | category[] | championship[];
+  defaultValue?: string;
   onChange?: (e: React.ChangeEvent<HTMLSelectElement>) => void;
 };
 
-function Select({ id, label, items, onChange }: Props) {
+function Select({ id, label, items, defaultValue, onChange }: Props) {
   const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     // Appeler la fonction onChange passée en tant que prop, si elle existe
     if (onChange) {
+      document.cookie = `selectedTeam=null; path=/`;
       onChange(e);
     }
   };
@@ -28,8 +30,9 @@ function Select({ id, label, items, onChange }: Props) {
         <select
           id={id}
           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          value={defaultValue}
           onChange={(e) => handleChange(e)}>
-          <option>{`Select ${label}`}</option>
+          <option value="">{`Select ${label}`}</option>
           {items.map((item) => (
             <option key={item.id} value={item.id}>
               {item.label}
