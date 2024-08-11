@@ -6,10 +6,11 @@ type Props = {
   team: string;
   playerA: string;
   playerB: string;
+  score?: string;
 };
 
 const CardTeam = (props: Props) => {
-  const { team, playerA, playerB } = props;
+  const { team, playerA, playerB, score } = props;
 
   // Fonction pour obtenir la valeur d'un cookie
   const getCookieValue = (name: string) => {
@@ -37,8 +38,15 @@ const CardTeam = (props: Props) => {
       <h1 className="text-l pb-2 mb-4 font-bold text-center border-b-2">
         {team}
       </h1>
-      <p>{playerA}</p>
-      <p>{playerB}</p>
+      <div className="flex flex-row justify-between">
+        <div>
+          <p>{playerA}</p>
+          <p>{playerB}</p>
+        </div>
+        <div className="text-2xl font-bold flex items-center">
+          <p>{score}</p>
+        </div>
+      </div>
     </div>
   );
 };
